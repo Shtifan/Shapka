@@ -12,7 +12,7 @@ function startTimer() {
     }, 1000);
 
     // Set initial font size
-    document.getElementById("timer").style.fontSize = "3rem"; // Adjust the font size here
+    document.getElementById("timer").style.fontSize = "4rem"; // Adjust the font size here
 }
 
 document.getElementById("hatButton").addEventListener("click", function () {

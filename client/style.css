@@ -32,7 +32,7 @@ body {
 }
 
 #timer {
-    font-size: 3rem; /* Adjust font size for timer */
+    font-size: 4rem; /* Adjust font size for timer */
 }
 
 .hat {
@@ -61,5 +61,5 @@ body {
 }
 
 .arrow {
-    font-size: 4rem; /* Adjust font size */
+    font-size: 3rem; /* Adjust font size */
 }
