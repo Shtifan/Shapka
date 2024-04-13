@@ -1,9 +1,29 @@
+const socket = io();
+
+document.addEventListener("mouseup", () => {
+    socket.emit("click");
+});
+
+socket.on("click", (click) => {
+    console.log(click);
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
+    const createRoomButton = document.getElementById("createRoom");
 
     loginForm.addEventListener("submit", async (event) => {
         event.preventDefault(); // Prevent default form submission
 
+        // Get username and room ID from the form
+        const username = document.getElementById("username").value;
+        const roomId = document.getElementById("roomId").value;
+
+        // Emit joinRoom event to server with username and room ID
+        socket.emit("joinRoom", roomId, username);
+    });
+
+    createRoomButton.addEventListener("click", async () => {
         // Get username from the form
         const username = document.getElementById("username").value;
 
@@ -12,6 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Emit createRoom event to server with username and room ID
         socket.emit("createRoom", roomId, username);
+
+        console.log("Room ID sent to server:", roomId); // Log the room ID to the console
     });
 });
 
