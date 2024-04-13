@@ -1,53 +1,65 @@
+/* Reset CSS */
 * {
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
+}
+
+/* Main styles */
+body {
     background-color: #3d4152;
 }
 
 .sidebar {
     position: fixed;
-    inset: 20px 0px 20px 20px;
+    top: 20px;
+    left: 20px;
     width: 20%;
+    height: calc(100% - 40px); /* Adjust sidebar height */
     background: #fff;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Add shadow */
+    border-radius: 10px; /* Add border radius */
 }
 
 .sidebar div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    font-size: 80px;
+    font-size: 2rem; /* Adjust font size */
+}
+
+#timer {
+    font-size: 3rem; /* Adjust font size for timer */
 }
 
 .hat {
-    position: fixed;
-    top: 40%;
+    position: absolute; /* Adjust positioning */
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 50%;
-    transition: all 0.1s ease-out;
+    transition: width 0.1s ease-out;
+    cursor: pointer; /* Add pointer cursor */
 }
 
 .hat:active {
     width: 49%;
-    transition: all 0.1s ease-out;
 }
 
 .words {
     color: #fff;
-    font-size: 40px;
-    position: fixed;
-    top: 85%;
-    left: 60%;
-    transform: translate(-50%, -50%);
+    font-size: 2.5rem; /* Adjust font size */
+    position: absolute; /* Adjust positioning */
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 50%;
-    transition: all 0.1s ease-out;
+    text-align: center; /* Center text */
 }
 
 .arrow {
-    font-size: 200px;
+    font-size: 4rem; /* Adjust font size */
 }
