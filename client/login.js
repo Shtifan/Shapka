@@ -20,6 +20,9 @@ loginForm.addEventListener("submit", async (event) => {
 
     // Emit joinRoom event to server with username and room ID
     socket.emit("joinRoom", roomId, username);
+
+    // Redirect to index.html
+    window.location.href = "/room/" + roomId;
 });
 
 createRoomButton.addEventListener("click", async () => {
@@ -32,7 +35,9 @@ createRoomButton.addEventListener("click", async () => {
     // Emit createRoom event to server with username and room ID
     socket.emit("createRoom", roomId, username);
 
-    console.log("Room ID sent to server:", roomId); // Log the room ID to the console
+    // Display the room ID on the page
+    const roomDisplay = document.getElementById("roomDisplay");
+    roomDisplay.textContent = "Room ID: " + roomId;
 });
 
 function generateRoomId(length) {

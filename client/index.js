@@ -1,4 +1,5 @@
 let timeleft = 60;
+let timerStarted = false;
 
 function startTimer() {
     let timer = setInterval(function () {
@@ -15,6 +16,13 @@ function startTimer() {
     document.getElementById("timer").style.fontSize = "4rem"; // Adjust the font size here
 }
 
-document.getElementById("hatButton").addEventListener("click", function () {
-    if (timeleft == 60) startTimer();
-});
+function handleClick() {
+    if (!timerStarted) {
+        startTimer();
+        timerStarted = true;
+        // Remove the event listener once clicked
+        document.getElementById("hatButton").removeEventListener("click", handleClick);
+    }
+}
+
+document.getElementById("hatButton").addEventListener("click", handleClick);
