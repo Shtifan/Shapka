@@ -1,4 +1,4 @@
-const socket = io();
+//const socket = io();
 
 document.addEventListener("DOMContentLoaded", function () {
     // letiable to track if the timer has started
