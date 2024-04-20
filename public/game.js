@@ -1,30 +1,40 @@
 const socket = io();
 
-let timeleft = 60;
-let timerStarted = false;
+document.addEventListener("DOMContentLoaded", function () {
+    // letiable to track if the timer has started
+    let timerStarted = false;
 
-function startTimer() {
-    let timer = setInterval(function () {
-        timeleft--;
-        document.getElementById("timer").textContent = `0:${timeleft < 10 ? "0" : ""}${timeleft}`;
-        if (timeleft == 0) {
-            document.getElementById("timer").innerHTML = "Time is up";
-            timeleft = 60;
-            clearInterval(timer);
-        }
-    }, 1000);
+    // Function to start the timer
+    function startTimer(duration, display) {
+        let timer = duration,
+            minutes,
+            seconds;
+        setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
 
-    // Set initial font size
-    document.getElementById("timer").style.fontSize = "4rem"; // Adjust the font size here
-}
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
 
-function handleClick() {
-    if (!timerStarted) {
-        startTimer();
-        timerStarted = true;
-        // Remove the event listener once clicked
-        document.getElementById("hatButton").removeEventListener("click", handleClick);
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
     }
-}
 
-document.getElementById("hatButton").addEventListener("click", handleClick);
+    // Event listener for the hat button
+    document.getElementById("hatButton").addEventListener("click", function () {
+        // Check if the timer has not started already
+        if (!timerStarted) {
+            // Time duration in seconds (1 minute in this case)
+            let duration = 60,
+                display = document.querySelector("#timer");
+            startTimer(duration, display);
+
+            // Set timerStarted to true to prevent starting again on subsequent clicks
+            timerStarted = true;
+        }
+    });
+});

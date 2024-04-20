@@ -28,10 +28,11 @@ body {
 }
 
 .sidebar div {
-    font-size: 2rem; /* Adjust font size */
+    font-size: 10rem; /* Adjust font size */
 }
 
 #timer {
+    margin-top: 20px;
     font-size: 4rem; /* Adjust font size for timer */
 }
 
@@ -58,8 +59,4 @@ body {
     transform: translateX(-50%);
     width: 50%;
     text-align: center; /* Center text */
-}
-
-.arrow {
-    font-size: 3rem; /* Adjust font size */
 }
