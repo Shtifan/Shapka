@@ -8,15 +8,18 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <div id="root"></div>
         <div class="sidebar">
             <div id="timer" style="margin-top: 20px">1:00</div>
             <div class="player"></div>
             <div style="font-size: 200px" class="arrow">↓</div>
             <div class="player"></div>
         </div>
+
         <input type="image" src="assets/hat.png" class="hat" id="hatButton" />
+
         <div class="words">Remaining words: <span id="remaining">30</span></div>
+
+        <script src="/socket.io/socket.io.js"></script>
         <script src="game.js"></script>
     </body>
 </html>

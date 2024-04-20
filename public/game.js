@@ -1,3 +1,5 @@
+const socket = io();
+
 let timeleft = 60;
 let timerStarted = false;
 
