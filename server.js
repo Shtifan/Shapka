@@ -7,21 +7,19 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-let click = 0;
-
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/login.html"));
-});
-
-app.get("/room/:id", (req, res) => {
-    let id = req.params.id;
-
-    res.sendFile(path.join(__dirname, "../client/index.html"));
+    res.sendFile(path.join(__dirname, "./public/login.html"));
 });
 
 app.get("/login.js", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/login.js"));
+    res.sendFile(path.join(__dirname, "./public/login.js"));
 });
+
+app.get("/room/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/game.html"));
+});
+
+let click = 0;
 
 // Socket.IO connection logic
 io.on("connection", (socket) => {
