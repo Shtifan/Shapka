@@ -28,6 +28,15 @@ function GameRoom({ room, players, socket, playerName, gameState, onLeaveRoom })
     const [team, setTeam] = useState(null);
     const [error, setError] = useState(null);
     const [isStarting, setIsStarting] = useState(false);
+    const [playerCount, setPlayerCount] = useState(0);
+
+    useEffect(() => {
+        // Update player count whenever players array changes
+        if (players && Array.isArray(players)) {
+            setPlayerCount(players.length);
+            console.log(`Player count updated: ${players.length}`);
+        }
+    }, [players]);
 
     useEffect(() => {
         // Find player's team when players list updates
@@ -62,7 +71,7 @@ function GameRoom({ room, players, socket, playerName, gameState, onLeaveRoom })
     const handleStartGame = () => {
         setError(null); // Clear previous errors
         setIsStarting(true);
-        socket.emit("startGame", room);
+        socket.emit("startGame", { roomName: room });
         // Don't rely on timeout to reset isStarting, handle error/success event if possible
         // For now, keep a safety timeout
         setTimeout(() => {
@@ -84,7 +93,8 @@ function GameRoom({ room, players, socket, playerName, gameState, onLeaveRoom })
         teamPlayers[teamKey].push(player);
     });
 
-    const canStart = players.length >= 4 && players.length % 2 === 0 && gameState === "waiting";
+    // Check if game can be started
+    const canStart = playerCount >= 4 && playerCount % 2 === 0 && gameState === "waiting";
 
     return (
         <Box sx={{ maxWidth: 900, mx: "auto", pb: 4 }}>
@@ -153,7 +163,7 @@ function GameRoom({ room, players, socket, playerName, gameState, onLeaveRoom })
                         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                             <GroupIcon sx={{ mr: 1, color: "#64b5f6" }} />
                             <Typography variant="h6" fontWeight="bold" color="white">
-                                Players ({players.length})
+                                Players ({playerCount})
                             </Typography>
                         </Box>
 
@@ -173,13 +183,13 @@ function GameRoom({ room, players, socket, playerName, gameState, onLeaveRoom })
                                     gap: 1,
                                 }}
                             >
-                                {players.length < 4 ? (
+                                {playerCount < 4 ? (
                                     <>
                                         <span style={{ fontSize: "1.5rem", marginRight: "8px" }}>⚠️</span>
-                                        Need at least {4 - players.length} more player{4 - players.length !== 1 ? "s" : ""}
+                                        Need at least {4 - playerCount} more player{4 - playerCount !== 1 ? "s" : ""}
                                         {` `}to start
                                     </>
-                                ) : players.length % 2 !== 0 ? (
+                                ) : playerCount % 2 !== 0 ? (
                                     <>
                                         <span style={{ fontSize: "1.5rem", marginRight: "8px" }}>⚠️</span>
                                         Need an even number of players to start

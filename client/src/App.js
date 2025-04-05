@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import Home from "./components/Home";
 import GameRoom from "./components/GameRoom";
 import WordSubmission from "./components/WordSubmission";
+import GamePlay from "./components/GamePlay";
 
 // Create socket connection
 const socket = io("http://localhost:5000");
@@ -17,6 +18,7 @@ function App() {
     const [gameState, setGameState] = useState("waiting");
     const [team, setTeam] = useState(null);
     const [sessionId, setSessionId] = useState(localStorage.getItem("sessionId") || null);
+    const [isLeader, setIsLeader] = useState(false);
     const navigate = useNavigate();
 
     // Log socket connection status
@@ -70,20 +72,51 @@ function App() {
         }
 
         // Player management events
-        socket.on("playerJoined", (updatedPlayers) => {
-            console.log("Players joined event:", updatedPlayers);
-            setPlayers(updatedPlayers);
+        socket.on("playerJoined", (data) => {
+            console.log("Players joined event:", data);
+            if (data.players && Array.isArray(data.players)) {
+                setPlayers(data.players);
+            }
         });
 
-        socket.on("playerLeft", (updatedPlayers) => {
-            console.log("Players left event:", updatedPlayers);
-            setPlayers(updatedPlayers);
+        socket.on("playerLeft", (data) => {
+            console.log("Players left event:", data);
+            if (data.players && Array.isArray(data.players)) {
+                setPlayers(data.players);
+            }
         });
 
-        socket.on("playerDisconnected", (updatedPlayers) => {
-            console.log("Player disconnected event:", updatedPlayers);
+        socket.on("playerDisconnected", (data) => {
+            console.log("Player disconnected event:", data);
             // Add visual indication for disconnected players later if needed
-            setPlayers(updatedPlayers);
+            if (data.players && Array.isArray(data.players)) {
+                setPlayers(data.players);
+            }
+        });
+
+        // Game state update handler
+        socket.on("gameStateUpdate", (state) => {
+            console.log("Game state update received:", state);
+            if (state) {
+                // Update all relevant state from the game state update
+                if (state.players && Array.isArray(state.players)) {
+                    setPlayers(state.players);
+                }
+                if (state.gameState) {
+                    setGameState(state.gameState);
+                }
+                if (state.isLeader !== undefined) {
+                    setIsLeader(state.isLeader);
+                }
+
+                // Find current player's team
+                if (state.players && Array.isArray(state.players)) {
+                    const currentPlayer = state.players.find((p) => p.id === socket.id);
+                    if (currentPlayer && currentPlayer.team) {
+                        setTeam(currentPlayer.team);
+                    }
+                }
+            }
         });
 
         socket.on("error", (errorMessage) => {
@@ -104,15 +137,17 @@ function App() {
             setPlayers([]);
             setGameState("waiting");
             setTeam(null);
+            setIsLeader(false);
             setError(null); // Clear any previous errors
             navigate("/");
         });
 
-        // Updated roomJoined handler (no leader)
-        socket.on("roomJoined", ({ roomName, sessionId }) => {
-            console.log("Room joined event:", { roomName, sessionId });
+        // Updated roomJoined handler with leader info
+        socket.on("roomJoined", ({ roomName, sessionId, isLeader }) => {
+            console.log("Room joined event:", { roomName, sessionId, isLeader });
             setRoom(roomName);
             setSessionId(sessionId);
+            setIsLeader(isLeader || false);
             setError(null);
             setGameState("waiting"); // Reset game state on join
 
@@ -122,6 +157,12 @@ function App() {
             localStorage.setItem("roomName", roomName);
 
             navigate(`/room/${roomName}`);
+        });
+
+        // New event for becoming the leader
+        socket.on("becameLeader", () => {
+            console.log("You are now the room leader");
+            setIsLeader(true);
         });
 
         // Game flow events
@@ -155,12 +196,16 @@ function App() {
         });
 
         // Event when all players have submitted their words
-        socket.on("allWordsSubmitted", ({ players, teams }) => {
-            console.log("All words submitted event:", { players, teams });
+        socket.on("allWordsSubmitted", ({ players, teams, rounds, currentRound }) => {
+            console.log("All words submitted event:", { players, teams, rounds, currentRound });
             setGameState("playing");
             setPlayers(players);
-            // TODO: Navigate to the actual gameplay screen
-            console.log("TODO: Navigate to gameplay screen");
+
+            // Navigate to the gameplay screen
+            const currentRoomName = localStorage.getItem("roomName");
+            if (currentRoomName) {
+                navigate(`/room/${currentRoomName}/play`);
+            }
         });
 
         // Event for player submission feedback (optional)
@@ -175,10 +220,12 @@ function App() {
             socket.off("playerDisconnected");
             socket.off("error");
             socket.off("roomJoined");
+            socket.off("becameLeader");
             socket.off("gameStarted");
             socket.off("allWordsSubmitted");
             socket.off("sessionInvalid");
-            socket.off("playerSubmittedWords"); // Cleanup optional listener
+            socket.off("playerSubmittedWords");
+            socket.off("gameStateUpdate"); // Add this line to clean up the new listener
         };
     }, [navigate, playerName, room]); // Keep dependencies
 
@@ -205,6 +252,7 @@ function App() {
         setPlayers([]);
         setGameState("waiting");
         setTeam(null);
+        setIsLeader(false);
         setError(null);
         navigate("/");
     };
@@ -216,7 +264,7 @@ function App() {
                     {/* Home route - only join room */}
                     <Route path="/" element={<Home onJoinRoom={joinRoom} error={error} />} />
 
-                    {/* Main game room route - no leader prop */}
+                    {/* Main game room route */}
                     <Route
                         path="/room/:roomName"
                         element={
@@ -228,7 +276,7 @@ function App() {
                                     socket={socket}
                                     playerName={playerName}
                                     gameState={gameState}
-                                    // Removed isLeader prop
+                                    isLeader={isLeader}
                                     onLeaveRoom={handleLeaveRoom}
                                 />
                             ) : (
@@ -249,11 +297,32 @@ function App() {
                                     socket={socket}
                                     playerName={playerName}
                                     team={team}
+                                    isLeader={isLeader}
                                     onLeaveRoom={handleLeaveRoom}
                                 />
                             ) : (
-                                // If not in correct state/room, redirect to home or room page
-                                <Navigate to={room ? `/room/${room}` : "/"} replace />
+                                <Navigate to="/" />
+                            )
+                        }
+                    />
+
+                    {/* Game play route */}
+                    <Route
+                        path="/room/:roomName/play"
+                        element={
+                            // Check localStorage as fallback for direct access/refresh
+                            (room || localStorage.getItem("roomName")) && gameState === "playing" ? (
+                                <GamePlay
+                                    room={room || localStorage.getItem("roomName")}
+                                    players={players}
+                                    socket={socket}
+                                    playerName={playerName}
+                                    team={team}
+                                    isLeader={isLeader}
+                                    onLeaveRoom={handleLeaveRoom}
+                                />
+                            ) : (
+                                <Navigate to="/" />
                             )
                         }
                     />
