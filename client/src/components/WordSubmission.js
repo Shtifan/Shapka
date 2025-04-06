@@ -88,11 +88,11 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
     const handleAddWord = (e) => {
         e.preventDefault();
         setError(null);
-        if (currentWord.trim() && words.length < 10) {
+        if (currentWord.trim() && words.length < 5) {
             setWords([...words, currentWord.trim().toLowerCase()]);
             setCurrentWord("");
-        } else if (words.length >= 10) {
-            setError("You have already added 10 words.");
+        } else if (words.length >= 5) {
+            setError("You have already added 5 words.");
         } else {
             setError("Please enter a valid word.");
         }
@@ -100,7 +100,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
 
     const handleSubmitWords = () => {
         setError(null);
-        if (words.length === 10) {
+        if (words.length === 5) {
             setIsSubmitting(true);
             console.log("Submitting words:", words);
             socket.emit("submitWords", { roomName: room, words });
@@ -111,7 +111,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                 }
             }, 5000);
         } else {
-            setError("You must submit exactly 10 words.");
+            setError("You must submit exactly 5 words.");
         }
     };
 
@@ -132,8 +132,8 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
     const teamMembers = getTeamMembers();
     const otherTeamMembers = getOtherTeamMembers();
 
-    const progressPercentage = (words.length / 10) * 100;
-    const hasSubmitted = submissionStatus[socket.id] === true || (words.length === 10 && isSubmitting);
+    const progressPercentage = (words.length / 5) * 100;
+    const hasSubmitted = submissionStatus[socket.id] === true || (words.length === 5 && isSubmitting);
 
     return (
         <Box sx={{ maxWidth: 1100, mx: "auto", pb: 4 }}>
@@ -185,7 +185,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                                 }}
                             />
                             <Typography variant="caption" sx={{ display: "block", mt: 0.5, color: "rgba(255,255,255,0.7)" }}>
-                                {words.length}/10 words entered
+                                {words.length}/5 words entered
                             </Typography>
                         </Box>
 
@@ -204,10 +204,10 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={7}>
                         <Typography variant="h6" fontWeight="bold" gutterBottom>
-                            Submit 10 Words
+                            Submit 5 Words
                         </Typography>
                         <Typography variant="body2" color="rgba(255,255,255,0.7)" gutterBottom sx={{ mb: 2 }}>
-                            Enter 10 words (nouns, verbs, names...) that your teammates will guess.
+                            Enter 5 words (nouns, verbs, names...) that your teammates will guess.
                         </Typography>
 
                         <Box component="form" onSubmit={handleAddWord} sx={{ mb: 3 }}>
@@ -235,7 +235,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                                     "& .MuiInputLabel-root.Mui-focused": { color: "#64b5f6" },
                                     "& .MuiFilledInput-input": { color: "white" },
                                 }}
-                                disabled={words.length >= 10 || hasSubmitted}
+                                disabled={words.length >= 5 || hasSubmitted}
                                 placeholder="Type a word and press Add"
                                 InputProps={{
                                     disableUnderline: true,
@@ -244,7 +244,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                                             type="submit"
                                             variant="contained"
                                             size="small"
-                                            disabled={!currentWord.trim() || words.length >= 10 || hasSubmitted}
+                                            disabled={!currentWord.trim() || words.length >= 5 || hasSubmitted}
                                             startIcon={<AddIcon />}
                                             sx={{
                                                 ml: 1,
@@ -318,7 +318,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                                     <ListItem>
                                         <ListItemText
                                             primary="No words added yet"
-                                            secondary="Add up to 10 words for the game"
+                                            secondary="Add up to 5 words for the game"
                                             primaryTypographyProps={{ color: "rgba(255,255,255,0.5)" }}
                                             secondaryTypographyProps={{ color: "rgba(255,255,255,0.4)" }}
                                         />
@@ -349,17 +349,17 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                             <Button
                                 variant="contained"
                                 onClick={handleSubmitWords}
-                                disabled={words.length !== 10 || isSubmitting || hasSubmitted}
+                                disabled={words.length !== 5 || isSubmitting || hasSubmitted}
                                 size="large"
                                 startIcon={
                                     isSubmitting ? <CircularProgress size={20} color="inherit" /> : <CheckCircleIcon />
                                 }
                                 sx={{
                                     fontWeight: "bold",
-                                    bgcolor: !hasSubmitted && words.length === 10 ? "#66bb6a" : "#444",
+                                    bgcolor: !hasSubmitted && words.length === 5 ? "#66bb6a" : "#444",
                                     color: "#111",
                                     "&:hover": {
-                                        bgcolor: !hasSubmitted && words.length === 10 ? "#81c784" : "#444",
+                                        bgcolor: !hasSubmitted && words.length === 5 ? "#81c784" : "#444",
                                     },
                                     "&.Mui-disabled": {
                                         bgcolor: hasSubmitted ? "#2e7d32" : "rgba(255,255,255,0.12)",
@@ -367,7 +367,7 @@ function WordSubmission({ room, players, socket, playerName, team, onLeaveRoom }
                                     },
                                 }}
                             >
-                                {isSubmitting ? "Submitting..." : hasSubmitted ? "Words Submitted" : "Submit 10 Words"}
+                                {isSubmitting ? "Submitting..." : hasSubmitted ? "Words Submitted" : "Submit 5 Words"}
                             </Button>
                         </Box>
                     </Grid>
