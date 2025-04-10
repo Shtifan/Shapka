@@ -1,26 +1,27 @@
 {
   "name": "shapka",
-  "version": "1.0.0",
-  "description": "A multiplayer web game",
-  "main": "server/index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "nodemon server/index.js",
-    "client": "cd client && npm start",
-    "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
-    "update": "npm update",
-    "update:all": "npm update && cd client && npm update",
-    "update:check": "npx npm-check-updates",
-    "update:client": "cd client && npx npm-check-updates",
-    "update:interactive": "npx npm-check-updates -u && cd client && npx npm-check-updates -u"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "socket.io": "^4.8.1",
-    "cors": "^2.8.5"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.2.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
-    "concurrently": "^9.1.2"
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.5",
+    "@eslint/eslintrc": "^3"
   }
-} 
+}
