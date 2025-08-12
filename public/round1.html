@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Round 1!</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .game-container { text-align: center; border: 2px solid #333; padding: 2rem; border-radius: 10px; }
+        #timer { font-size: 3rem; font-weight: bold; color: #d9534f; }
+        #word-display { font-size: 2.5rem; margin: 2rem; min-height: 4rem; background-color: #f7f7f7; padding: 1rem; border-radius: 5px; }
+        #controls button { font-size: 1.2rem; padding: 10px 20px; margin: 5px; cursor: pointer; min-width: 150px; }
+        #controls button:disabled { cursor: not-allowed; background-color: #ccc; }
+        .info-bar { display: flex; justify-content: space-around; width: 100%; margin-top: 2rem; font-size: 1.2rem; }
+        .score { font-weight: bold; }
+        #teamA-score { color: red; }
+        #teamB-score { color: blue; }
+        #game-status { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="timer">1:00</div>
+        <div id="word-display">- - -</div>
+        <div id="controls">
+            <button id="new-word-btn">New Word</button>
+            <button id="guessed-btn">Guessed</button>
+            <button id="skip-btn">Skip Word</button>
+        </div>
+        <div class="info-bar">
+            <div>Words Left: <span id="words-left">40</span></div>
+            <div>Score: <span id="teamA-score" class="score">0</span> | <span id="teamB-score" class="score">0</span></div>
+        </div>
+         <div id="game-status">Waiting to start...</div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="round1.js"></script>
+</body>
+</html>

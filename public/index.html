@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Join Game</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #f0f0f0;
+            }
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: white;
+            }
+            input {
+                font-size: 16px;
+                padding: 8px;
+            }
+            button {
+                font-size: 16px;
+                padding: 10px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="joinForm">
+            <h2>Join a Game Room</h2>
+            <input type="text" id="roomIdInput" placeholder="Enter Room ID" required />
+            <button type="submit">Join Game</button>
+        </form>
+        <!-- Inside the <script> tag of index.html -->
+        <script>
+            document.getElementById("joinForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                const roomId = document.getElementById("roomIdInput").value;
+                if (roomId) {
+                    // Redirect to the LOBBY page now
+                    window.location.href = `/lobby?roomId=${roomId}`;
+                }
+            });
+        </script>
+    </body>
+</html>

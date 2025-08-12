@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Game Lobby</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                text-align: center;
+                padding-top: 50px;
+            }
+            .teams-container {
+                display: flex;
+                justify-content: center;
+                gap: 50px;
+                margin-top: 20px;
+            }
+            .team-card {
+                border: 2px solid #ccc;
+                border-radius: 8px;
+                padding: 20px;
+                width: 200px;
+            }
+            .team-card h3 {
+                margin-top: 0;
+            }
+            .slot {
+                border: 1px dashed #aaa;
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 4px;
+            }
+            .slot.filled {
+                background-color: #e0e0e0;
+                border-style: solid;
+            }
+            button {
+                font-size: 16px;
+                padding: 10px;
+                cursor: pointer;
+            }
+            #status {
+                margin-top: 30px;
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="roomTitle"></h1>
+        <div class="teams-container">
+            <div class="team-card">
+                <h3>Team A</h3>
+                <div id="teamA_slot1" class="slot">Empty</div>
+                <div id="teamA_slot2" class="slot">Empty</div>
+                <button id="joinTeamA">Join Team A</button>
+            </div>
+            <div class="team-card">
+                <h3>Team B</h3>
+                <div id="teamB_slot1" class="slot">Empty</div>
+                <div id="teamB_slot2" class="slot">Empty</div>
+                <button id="joinTeamB">Join Team B</button>
+            </div>
+        </div>
+        <div id="status">Waiting for players...</div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="lobby.js"></script>
+    </body>
+</html>
